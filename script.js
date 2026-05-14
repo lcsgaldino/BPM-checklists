@@ -141,16 +141,36 @@ function generateTab2ValidationText() {
     validationHTML += `<p><strong>PN totally validated for:</strong> ${pnValidationValues.join(', ')} ${hasNone ? '(' + pnStatus + ')' : pnStatus}</p>`;
     
     // BPR Required
-    const bprStatus = bprRequired.value === 'yes' ? 'Eligible ✅' : 'Not eligible ❌';
-    validationHTML += `<p><strong>If needed, the BPR required was attended?</strong> ${bprRequired.value === 'yes' ? 'Yes' : 'No'} (${bprStatus})</p>`;
+    let bprStatus, bprText;
+    if (bprRequired.value === 'yes') {
+        bprStatus = 'Eligible ✅';
+        bprText = 'Yes';
+    } else if (bprRequired.value === 'notApplicable') {
+        bprStatus = 'Eligible ✅';
+        bprText = 'Not applicable';
+    } else {
+        bprStatus = 'Not eligible ❌';
+        bprText = 'No';
+    }
+    validationHTML += `<p><strong>If needed, the BPR required was attended?</strong> ${bprText} (${bprStatus})</p>`;
     
     // On-time criteria
     const onTimeStatus = onTimeCriteria.value === 'yes' ? 'Eligible ✅' : 'Review On time criteria ⚠️';
     validationHTML += `<p><strong>The on-time criteria was validated?</strong> ${onTimeCriteria.value === 'yes' ? 'Yes' : 'No'} (${onTimeStatus})</p>`;
     
     // Out year criteria
-    const outYearStatus = outYearCriteria.value === 'yes' ? 'Eligible ✅' : 'Review Out year criteria ⚠️';
-    validationHTML += `<p><strong>If applicable, did you consider the Out year criteria?</strong> ${outYearCriteria.value === 'yes' ? 'Yes' : 'No'} (${outYearStatus})</p>`;
+    let outYearStatus, outYearText;
+    if (outYearCriteria.value === 'yes') {
+        outYearStatus = 'Eligible ✅';
+        outYearText = 'Yes';
+    } else if (outYearCriteria.value === 'notApplicable') {
+        outYearStatus = 'Eligible ✅';
+        outYearText = 'Not applicable';
+    } else {
+        outYearStatus = 'Review Out year criteria ⚠️';
+        outYearText = 'No';
+    }
+    validationHTML += `<p><strong>If applicable, did you consider the Out year criteria?</strong> ${outYearText} (${outYearStatus})</p>`;
     
     // STA percentages
     const staStatus = staPercentages.value === 'yes' ? 'Eligible ✅' : 'Review STA criteria ⚠️';
@@ -165,14 +185,23 @@ function generateTab2ValidationText() {
     validationHTML += `<p><strong>The calculation file was completed filled?</strong> ${calculationFile.value === 'yes' ? 'Yes' : 'No'} (${calcStatus})</p>`;
     
     // Determine overall eligibility
+    // Debug: log values
+    console.log('BPR Required:', bprRequired.value);
+    console.log('Out Year Criteria:', outYearCriteria.value);
+    
+    const bprEligible = (bprRequired.value === 'yes' || bprRequired.value === 'notApplicable');
+    const outYearEligible = (outYearCriteria.value === 'yes' || outYearCriteria.value === 'notApplicable');
+    
     const isEligible =
         pnValidationEligible &&
-        bprRequired.value === 'yes' &&
+        bprEligible &&
         onTimeCriteria.value === 'yes' &&
-        outYearCriteria.value === 'yes' &&
+        outYearEligible &&
         staPercentages.value === 'yes' &&
         claimForms.value === 'yes' &&
         calculationFile.value === 'yes';
+    
+    console.log('Is Eligible:', isEligible);
     
     // Final decision
     const finalDecision = isEligible
