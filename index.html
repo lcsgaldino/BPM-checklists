@@ -1,227 +1,357 @@
-// Tab switching functionality
-function openTab(evt, tabName) {
-    // Hide all tab contents
-    const tabContents = document.getElementsByClassName('tab-content');
-    for (let i = 0; i < tabContents.length; i++) {
-        tabContents[i].classList.remove('active');
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master BPM Process Check Lists</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Master BPM Process Check Lists for Approval and Validation</h1>
+        
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'tab1')">Renewal SaaS/SL</button>
+            <button class="tab-button" onclick="openTab(event, 'tab2')">Renewal S&S – Argentina</button>
+            <button class="tab-button" onclick="openTab(event, 'tab3')">Quarterly SW VAD rebates</button>
+            <button class="tab-button" onclick="openTab(event, 'tab4')">New License</button>
+            <button class="tab-button" onclick="openTab(event, 'tab5')">Hardware</button>
+            <button class="tab-button" onclick="openTab(event, 'tab6')">BPCM</button>
+            <button class="tab-button" onclick="openTab(event, 'tab7')">Trade-in</button>
+        </div>
 
-    // Remove active class from all tab buttons
-    const tabButtons = document.getElementsByClassName('tab-button');
-    for (let i = 0; i < tabButtons.length; i++) {
-        tabButtons[i].classList.remove('active');
-    }
+        <!-- Tab 1: Renewal SaaS/SL -->
+        <div id="tab1" class="tab-content active">
+            <h2>Renewal SaaS/SL – Check List</h2>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="section-label">SaaS & SL Annuities Type:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="annuities" value="NGE" id="nge">
+                            SaaS & SL Annuities NGE
+                        </label>
+                        <label>
+                            <input type="radio" name="annuities" value="GE" id="ge">
+                            SaaS & SL Annuities GE
+                        </label>
+                    </div>
+                </div>
 
-    // Show the selected tab and mark button as active
-    document.getElementById(tabName).classList.add('active');
-    evt.currentTarget.classList.add('active');
-}
+                <div class="form-group">
+                    <label class="section-label">Preferred VAD:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="preferredVAD" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="preferredVAD" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
 
-// Generate validation text
-function generateValidationText() {
-    // Get all form values
-    const annuities = document.querySelector('input[name="annuities"]:checked');
-    const preferredVAD = document.querySelector('input[name="preferredVAD"]:checked');
-    const bpa = document.querySelector('input[name="bpa"]:checked');
-    const eligiblePN = document.querySelector('input[name="eligiblePN"]:checked');
-    const resellerID = document.querySelector('input[name="resellerID"]:checked');
-    const materialGroup = document.querySelector('input[name="materialGroup"]:checked');
-    const bpEU = document.querySelector('input[name="bpEU"]:checked');
-    const payment = document.querySelector('input[name="payment"]:checked');
-    
-    // Get all checked program types
-    const programTypes = document.querySelectorAll('input[name="programType"]:checked');
-    const programTypeValues = Array.from(programTypes).map(pt => pt.value);
+                <div class="form-group">
+                    <label class="section-label">BPA:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="bpa" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="bpa" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
 
-    // Validate that all required fields are filled
-    if (!annuities || !preferredVAD || !bpa || !eligiblePN || 
-        !resellerID || !materialGroup || !bpEU || !payment || programTypeValues.length === 0) {
-        alert('Please complete all fields before generating validation text.');
-        return;
-    }
+                <div class="form-group">
+                    <label class="section-label">Deal Registration:</label>
+                    <div class="info-message">Not applicable</div>
+                </div>
 
-    // Determine eligibility based on the example criteria
-    // For eligible: annuities type is variable (NGE or GE), preferredVAD=yes, bpa=yes,
-    // eligiblePN=yes, resellerID=yes, materialGroup=yes, bpEU=no, payment=no
-    // Program type is also variable (any combination is acceptable)
-    const isEligible =
-        (annuities.value === 'NGE' || annuities.value === 'GE') &&
-        preferredVAD.value === 'yes' &&
-        bpa.value === 'yes' &&
-        eligiblePN.value === 'yes' &&
-        resellerID.value === 'yes' &&
-        materialGroup.value === 'yes' &&
-        bpEU.value === 'no' &&
-        payment.value === 'no';
+                <div class="form-group">
+                    <label class="section-label">Program type:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="programType" value="PA" id="pa">
+                            PA
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programType" value="PAE/PAX" id="paepax">
+                            PAE/PAX
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programType" value="CSA" id="csa">
+                            CSA
+                        </label>
+                    </div>
+                </div>
 
-    // Build the validation text
-    let validationHTML = '<h3>Validation Summary</h3>';
-    
-    // Annuities type
-    validationHTML += `<p><strong>SaaS & SL Annuities ${annuities.value}</strong></p>`;
-    
-    // Preferred VAD
-    validationHTML += `<p><strong>Preferred VAD:</strong> ${preferredVAD.value === 'yes' ? 'Yes ✅' : 'No ❌'}</p>`;
-    
-    // BPA
-    validationHTML += `<p><strong>BPA:</strong> ${bpa.value === 'yes' ? 'Yes ✅' : 'No ❌'}</p>`;
-    
-    // Deal Registration
-    validationHTML += `<p><strong>Deal Registration:</strong> Not applicable</p>`;
-    
-    // Program type (variable - can be any combination)
-    validationHTML += `<p><strong>Program type:</strong> ${programTypeValues.join(', ')} ✅</p>`;
-    
-    // Eligible PN
-    validationHTML += `<p><strong>Eligible PN: validation according to the report:</strong> ${eligiblePN.value === 'yes' ? 'Yes ✅' : 'No ❌'}</p>`;
-    
-    // Reseller ID
-    validationHTML += `<p><strong>Reseller ID order = Reseller ID BP Capabilities (exception GBM):</strong> ${resellerID.value === 'yes' ? 'Yes ✅' : 'No ❌'}</p>`;
-    
-    // Material group
-    validationHTML += `<p><strong>Material group approved in BP Capabilities:</strong> ${materialGroup.value === 'yes' ? 'Yes ✅' : 'No ❌'}</p>`;
-    
-    // BP=EU (special logic)
-    const bpEUText = bpEU.value === 'no' ? 'Eligible ✅' : 'Not eligible ❌';
-    validationHTML += `<p><strong>BP=EU:</strong> ${bpEU.value === 'yes' ? 'Yes' : 'No'} (${bpEUText})</p>`;
-    
-    // Payment
-    validationHTML += `<p><strong>Any Payment – no payment in DSW SAP neither DMT:</strong> ${payment.value === 'no' ? 'No ✅' : 'Yes ❌'}</p>`;
-    
-    // Final decision
-    const finalDecision = isEligible 
-        ? 'Eligible to proceed to peer review ✅' 
-        : 'Not Eligible ❌';
-    
-    validationHTML += `<p class="final-decision"><strong>Final decision validation:</strong> ${finalDecision}</p>`;
+                <div class="form-group">
+                    <label class="section-label">Eligible PN: validation according to the report:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="eligiblePN" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="eligiblePN" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
 
-    // Display the result
-    const resultDiv = document.getElementById('validationResult');
-    resultDiv.innerHTML = validationHTML;
-    resultDiv.className = 'validation-result show ' + (isEligible ? 'eligible' : 'not-eligible');
-    
-    // Scroll to result
-    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
+                <div class="form-group">
+                    <label class="section-label">Reseller ID order = Reseller ID BP Capabilities (exception GBM):</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="resellerID" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="resellerID" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
 
-// Generate validation text for Tab 2 (S&S Argentina)
-function generateTab2ValidationText() {
-    // Get all form values
-    const bidType = document.querySelector('input[name="bidType"]:checked');
-    const pnValidations = document.querySelectorAll('input[name="pnValidation"]:checked');
-    const bprRequired = document.querySelector('input[name="bprRequired"]:checked');
-    const onTimeCriteria = document.querySelector('input[name="onTimeCriteria"]:checked');
-    const outYearCriteria = document.querySelector('input[name="outYearCriteria"]:checked');
-    const staPercentages = document.querySelector('input[name="staPercentages"]:checked');
-    const claimForms = document.querySelector('input[name="claimForms"]:checked');
-    const calculationFile = document.querySelector('input[name="calculationFile"]:checked');
+                <div class="form-group">
+                    <label class="section-label">Material group approved in BP Capabilities:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="materialGroup" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="materialGroup" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
 
-    // Get all checked PN validation values
-    const pnValidationValues = Array.from(pnValidations).map(pn => pn.value);
+                <div class="form-group">
+                    <label class="section-label">BP=EU:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="bpEU" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="bpEU" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
 
-    // Validate that all required fields are filled
-    if (!bidType || pnValidationValues.length === 0 || !bprRequired || !onTimeCriteria ||
-        !outYearCriteria || !staPercentages || !claimForms || !calculationFile) {
-        alert('Please complete all fields before generating validation text.');
-        return;
-    }
+                <div class="form-group">
+                    <label class="section-label">Any Payment – no payment in DSW SAP neither DMT:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="payment" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="payment" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
 
-    // Check if "none" is selected in PN validation
-    const hasNone = pnValidationValues.includes('none');
-    const pnValidationEligible = !hasNone;
+                <button class="generate-btn" onclick="generateValidationText()">Generate Text for Validation</button>
 
-    // Build the validation text
-    let validationHTML = '<h3>Validation Summary</h3>';
-    
-    // BID Type
-    validationHTML += `<p><strong>${bidType.value}</strong></p>`;
-    
-    // PN Validation with special handling for "none"
-    const pnStatus = hasNone ? 'Review the PN validation ⚠️' : '✅';
-    validationHTML += `<p><strong>PN totally validated for:</strong> ${pnValidationValues.join(', ')} ${hasNone ? '(' + pnStatus + ')' : pnStatus}</p>`;
-    
-    // BPR Required
-    let bprStatus, bprText;
-    if (bprRequired.value === 'yes') {
-        bprStatus = 'Eligible ✅';
-        bprText = 'Yes';
-    } else if (bprRequired.value === 'notApplicable') {
-        bprStatus = 'Eligible ✅';
-        bprText = 'Not applicable';
-    } else {
-        bprStatus = 'Not eligible ❌';
-        bprText = 'No';
-    }
-    validationHTML += `<p><strong>If needed, the BPR required was attended?</strong> ${bprText} (${bprStatus})</p>`;
-    
-    // On-time criteria
-    const onTimeStatus = onTimeCriteria.value === 'yes' ? 'Eligible ✅' : 'Review On time criteria ⚠️';
-    validationHTML += `<p><strong>The on-time criteria was validated?</strong> ${onTimeCriteria.value === 'yes' ? 'Yes' : 'No'} (${onTimeStatus})</p>`;
-    
-    // Out year criteria
-    let outYearStatus, outYearText;
-    if (outYearCriteria.value === 'yes') {
-        outYearStatus = 'Eligible ✅';
-        outYearText = 'Yes';
-    } else if (outYearCriteria.value === 'notApplicable') {
-        outYearStatus = 'Eligible ✅';
-        outYearText = 'Not applicable';
-    } else {
-        outYearStatus = 'Review Out year criteria ⚠️';
-        outYearText = 'No';
-    }
-    validationHTML += `<p><strong>If applicable, did you consider the Out year criteria?</strong> ${outYearText} (${outYearStatus})</p>`;
-    
-    // STA percentages
-    const staStatus = staPercentages.value === 'yes' ? 'Eligible ✅' : 'Review STA criteria ⚠️';
-    validationHTML += `<p><strong>The percentages for non-STA and STA was consider?</strong> ${staPercentages.value === 'yes' ? 'Yes' : 'No'} (${staStatus})</p>`;
-    
-    // Claim forms
-    const claimStatus = claimForms.value === 'yes' ? 'Eligible ✅' : 'Review check list ⚠️';
-    validationHTML += `<p><strong>All the claim forms check list was performed?</strong> ${claimForms.value === 'yes' ? 'Yes' : 'No'} (${claimStatus})</p>`;
-    
-    // Calculation file
-    const calcStatus = calculationFile.value === 'yes' ? 'Eligible ✅' : 'Review calculation file ⚠️';
-    validationHTML += `<p><strong>The calculation file was completed filled?</strong> ${calculationFile.value === 'yes' ? 'Yes' : 'No'} (${calcStatus})</p>`;
-    
-    // Determine overall eligibility
-    // Debug: log values
-    console.log('BPR Required:', bprRequired.value);
-    console.log('Out Year Criteria:', outYearCriteria.value);
-    
-    const bprEligible = (bprRequired.value === 'yes' || bprRequired.value === 'notApplicable');
-    const outYearEligible = (outYearCriteria.value === 'yes' || outYearCriteria.value === 'notApplicable');
-    
-    const isEligible =
-        pnValidationEligible &&
-        bprEligible &&
-        onTimeCriteria.value === 'yes' &&
-        outYearEligible &&
-        staPercentages.value === 'yes' &&
-        claimForms.value === 'yes' &&
-        calculationFile.value === 'yes';
-    
-    console.log('Is Eligible:', isEligible);
-    
-    // Final decision
-    const finalDecision = isEligible
-        ? 'Eligible to proceed ✅'
-        : 'Review required - Not all criteria met ⚠️';
-    
-    validationHTML += `<p class="final-decision"><strong>Final decision validation:</strong> ${finalDecision}</p>`;
+                <div id="validationResult" class="validation-result"></div>
+            </div>
+        </div>
 
-    // Display the result
-    const resultDiv = document.getElementById('validationResultTab2');
-    resultDiv.innerHTML = validationHTML;
-    resultDiv.className = 'validation-result show ' + (isEligible ? 'eligible' : 'not-eligible');
-    
-    // Scroll to result
-    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
+        <!-- Tab 2: Renewal S&S Argentina -->
+        <div id="tab2" class="tab-content">
+            <h2>Renewal S&S – Argentina – Check List</h2>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="section-label">BID Type:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="bidType" value="NGE BID" id="ngeBid">
+                            NGE BID
+                        </label>
+                        <label>
+                            <input type="radio" name="bidType" value="GE BID" id="geBid">
+                            GE BID
+                        </label>
+                    </div>
+                </div>
 
-// Add event listeners when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Renewal Checklist Tool loaded successfully');
-});
+                <div class="form-group">
+                    <label class="section-label">PN totally validated for:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="pnValidation" value="Renewal quotation (quote 27)" id="renewalQuote">
+                            Renewal quotation (quote 27)
+                        </label>
+                        <label>
+                            <input type="checkbox" name="pnValidation" value="SA38" id="sa38">
+                            SA38
+                        </label>
+                        <label>
+                            <input type="checkbox" name="pnValidation" value="MIP (pre-sales)" id="mip">
+                            MIP (pre-sales)
+                        </label>
+                        <label>
+                            <input type="checkbox" name="pnValidation" value="none" id="pnNone">
+                            None
+                        </label>
+                    </div>
+                </div>
 
-// Made with Bob
+                <div class="form-group">
+                    <label class="section-label">If needed, the BPR required was attended?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="bprRequired" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="bprRequired" value="no">
+                            No
+                        </label>
+                        <label>
+                            <input type="radio" name="bprRequired" value="notApplicable">
+                            Not applicable
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">The on-time criteria was validated?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="onTimeCriteria" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="onTimeCriteria" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">If applicable, did you consider the Out year criteria?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="outYearCriteria" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="outYearCriteria" value="no">
+                            No
+                        </label>
+                        <label>
+                            <input type="radio" name="outYearCriteria" value="notApplicable">
+                            Not applicable
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">The percentages for non-STA and STA was consider?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="staPercentages" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="staPercentages" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">All the claim forms check list was performed?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="claimForms" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="claimForms" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">The calculation file was completed filled?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="calculationFile" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="calculationFile" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <button class="generate-btn" onclick="generateTab2ValidationText()">Generate Text for Validation</button>
+
+                <div id="validationResultTab2" class="validation-result"></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Quarterly SW VAD rebates -->
+        <div id="tab3" class="tab-content">
+            <h2>Quarterly SW VAD rebates – Check List</h2>
+            <div class="placeholder">
+                <p>⏳ Awaiting instructions...</p>
+                <p>This section will be configured once requirements are provided.</p>
+            </div>
+        </div>
+
+        <!-- Tab 4: New License -->
+        <div id="tab4" class="tab-content">
+            <h2>New License – Check List</h2>
+            <div class="placeholder">
+                <p>⏳ Awaiting instructions...</p>
+                <p>This section will be configured once requirements are provided.</p>
+            </div>
+        </div>
+
+        <!-- Tab 5: Hardware -->
+        <div id="tab5" class="tab-content">
+            <h2>Hardware – Check List</h2>
+            <div class="placeholder">
+                <p>⏳ Awaiting instructions...</p>
+                <p>This section will be configured once requirements are provided.</p>
+            </div>
+        </div>
+
+        <!-- Tab 6: BPCM -->
+        <div id="tab6" class="tab-content">
+            <h2>BPCM – Check List</h2>
+            <div class="placeholder">
+                <p>⏳ Awaiting instructions...</p>
+                <p>This section will be configured once requirements are provided.</p>
+            </div>
+        </div>
+
+        <!-- Tab 7: Trade-in -->
+        <div id="tab7" class="tab-content">
+            <h2>Trade-in – Check List</h2>
+            <div class="placeholder">
+                <p>⏳ Awaiting instructions...</p>
+                <p>This section will be configured once requirements are provided.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
