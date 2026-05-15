@@ -28,21 +28,22 @@ function generateValidationText() {
     const materialGroup = document.querySelector('input[name="materialGroup"]:checked');
     const bpEU = document.querySelector('input[name="bpEU"]:checked');
     const payment = document.querySelector('input[name="payment"]:checked');
+    const filesAttached = document.querySelector('input[name="filesAttachedTab1"]:checked');
     
     // Get all checked program types
     const programTypes = document.querySelectorAll('input[name="programType"]:checked');
     const programTypeValues = Array.from(programTypes).map(pt => pt.value);
 
     // Validate that all required fields are filled
-    if (!annuities || !preferredVAD || !bpa || !eligiblePN || 
-        !resellerID || !materialGroup || !bpEU || !payment || programTypeValues.length === 0) {
+    if (!annuities || !preferredVAD || !bpa || !eligiblePN ||
+        !resellerID || !materialGroup || !bpEU || !payment || !filesAttached || programTypeValues.length === 0) {
         alert('Please complete all fields before generating validation text.');
         return;
     }
 
     // Determine eligibility based on the example criteria
     // For eligible: annuities type is variable (NGE or GE), preferredVAD=yes, bpa=yes,
-    // eligiblePN=yes, resellerID=yes, materialGroup=yes, bpEU=no, payment=no
+    // eligiblePN=yes, resellerID=yes, materialGroup=yes, bpEU=no, payment=no, filesAttached=yes
     // Program type is also variable (any combination is acceptable)
     const isEligible =
         (annuities.value === 'NGE' || annuities.value === 'GE') &&
@@ -52,7 +53,8 @@ function generateValidationText() {
         resellerID.value === 'yes' &&
         materialGroup.value === 'yes' &&
         bpEU.value === 'no' &&
-        payment.value === 'no';
+        payment.value === 'no' &&
+        filesAttached.value === 'yes';
 
     // Build the validation text
     let validationHTML = '<h3>Validation Summary</h3>';
@@ -88,9 +90,13 @@ function generateValidationText() {
     // Payment
     validationHTML += `<p><strong>Any Payment – no payment in DSW SAP neither DMT:</strong> ${payment.value === 'no' ? 'No ✅' : 'Yes ❌'}</p>`;
     
+    // Files Attached
+    const filesStatus = filesAttached.value === 'yes' ? '✅' : '❌';
+    validationHTML += `<p><strong>The approved files was attached:</strong> ${filesAttached.value === 'yes' ? 'Yes' : 'No'} ${filesStatus}</p>`;
+    
     // Final decision
-    const finalDecision = isEligible 
-        ? 'Eligible to proceed to peer review ✅' 
+    const finalDecision = isEligible
+        ? 'Eligible to proceed to peer review ✅'
         : 'Not Eligible ❌';
     
     validationHTML += `<p class="final-decision"><strong>Final decision validation:</strong> ${finalDecision}</p>`;
@@ -115,13 +121,14 @@ function generateTab2ValidationText() {
     const staPercentages = document.querySelector('input[name="staPercentages"]:checked');
     const claimForms = document.querySelector('input[name="claimForms"]:checked');
     const calculationFile = document.querySelector('input[name="calculationFile"]:checked');
+    const filesAttached = document.querySelector('input[name="filesAttachedTab2"]:checked');
 
     // Get all checked PN validation values
     const pnValidationValues = Array.from(pnValidations).map(pn => pn.value);
 
     // Validate that all required fields are filled
     if (!bidType || pnValidationValues.length === 0 || !bprRequired || !onTimeCriteria ||
-        !outYearCriteria || !staPercentages || !claimForms || !calculationFile) {
+        !outYearCriteria || !staPercentages || !claimForms || !calculationFile || !filesAttached) {
         alert('Please complete all fields before generating validation text.');
         return;
     }
@@ -184,6 +191,20 @@ function generateTab2ValidationText() {
     const calcStatus = calculationFile.value === 'yes' ? 'Eligible ✅' : 'Review calculation file ⚠️';
     validationHTML += `<p><strong>The calculation file was completed filled?</strong> ${calculationFile.value === 'yes' ? 'Yes' : 'No'} (${calcStatus})</p>`;
     
+    // Files Attached
+    let filesStatus, filesText;
+    if (filesAttached.value === 'yes') {
+        filesStatus = 'Eligible ✅';
+        filesText = 'Yes';
+    } else if (filesAttached.value === 'notApplicable') {
+        filesStatus = 'Eligible ✅';
+        filesText = 'Not applicable';
+    } else {
+        filesStatus = 'Not eligible ❌';
+        filesText = 'No';
+    }
+    validationHTML += `<p><strong>The approved files was attached:</strong> ${filesText} (${filesStatus})</p>`;
+    
     // Determine overall eligibility
     // Debug: log values
     console.log('BPR Required:', bprRequired.value);
@@ -191,6 +212,7 @@ function generateTab2ValidationText() {
     
     const bprEligible = (bprRequired.value === 'yes' || bprRequired.value === 'notApplicable');
     const outYearEligible = (outYearCriteria.value === 'yes' || outYearCriteria.value === 'notApplicable');
+    const filesEligible = (filesAttached.value === 'yes' || filesAttached.value === 'notApplicable');
     
     const isEligible =
         pnValidationEligible &&
@@ -199,7 +221,8 @@ function generateTab2ValidationText() {
         outYearEligible &&
         staPercentages.value === 'yes' &&
         claimForms.value === 'yes' &&
-        calculationFile.value === 'yes';
+        calculationFile.value === 'yes' &&
+        filesEligible;
     
     console.log('Is Eligible:', isEligible);
     
@@ -212,6 +235,84 @@ function generateTab2ValidationText() {
 
     // Display the result
     const resultDiv = document.getElementById('validationResultTab2');
+    resultDiv.innerHTML = validationHTML;
+    resultDiv.className = 'validation-result show ' + (isEligible ? 'eligible' : 'not-eligible');
+    
+    // Scroll to result
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Generate validation text for Tab 3 (Quarterly SW VAD rebates)
+function generateTab3ValidationText() {
+    // Get all form values
+    const rebateType = document.querySelector('input[name="rebateType"]:checked');
+    const distributorValidated = document.querySelector('input[name="distributorValidated"]:checked');
+    const programs = document.querySelectorAll('input[name="programs"]:checked');
+    const amountsValidated = document.querySelector('input[name="amountsValidated"]:checked');
+    const additionalApproval = document.querySelector('input[name="additionalApproval"]:checked');
+    const filesAttached = document.querySelector('input[name="filesAttached"]:checked');
+
+    // Get all checked program values
+    const programValues = Array.from(programs).map(p => p.value);
+
+    // Validate that all required fields are filled
+    if (!rebateType || !distributorValidated || programValues.length === 0 ||
+        !amountsValidated || !additionalApproval || !filesAttached) {
+        alert('Please complete all fields before generating validation text.');
+        return;
+    }
+
+    // Determine eligibility
+    // All fields must be "yes" except additionalApproval which can be yes or no
+    const isEligible =
+        distributorValidated.value === 'yes' &&
+        amountsValidated.value === 'yes' &&
+        filesAttached.value === 'yes';
+
+    // Build the validation text
+    let validationHTML = '<h3>Validation Summary</h3>';
+    
+    // Rebate Type
+    validationHTML += `<p><strong>Rebate Type:</strong> ${rebateType.value}</p>`;
+    
+    // Distributor Validated
+    const distributorStatus = distributorValidated.value === 'yes' ? '✅' : '❌';
+    validationHTML += `<p><strong>The indicate distributor was validated according to masterlist:</strong> ${distributorValidated.value === 'yes' ? 'Yes' : 'No'} ${distributorStatus}</p>`;
+    
+    // Programs involved
+    validationHTML += `<p><strong>Programs involved in this claim:</strong> ${programValues.join(', ')} ✅</p>`;
+    
+    // Amounts Validated
+    const amountsStatus = amountsValidated.value === 'yes' ? '✅' : '❌';
+    validationHTML += `<p><strong>The amounts was validated according to masterlist:</strong> ${amountsValidated.value === 'yes' ? 'Yes' : 'No'} ${amountsStatus}</p>`;
+    
+    // Additional Approval
+    const approvalText = additionalApproval.value === 'yes'
+        ? 'Yes - Additional approval required for amounts higher than 25K'
+        : 'No - Amount is within standard approval limits';
+    const approvalStatus = additionalApproval.value === 'yes' ? '⚠️' : '✅';
+    validationHTML += `<p><strong>Additional approval needed:</strong> ${approvalText} ${approvalStatus}</p>`;
+    
+    // Files Attached
+    const filesStatus = filesAttached.value === 'yes' ? '✅' : '❌';
+    validationHTML += `<p><strong>The approved files was attached:</strong> ${filesAttached.value === 'yes' ? 'Yes' : 'No'} ${filesStatus}</p>`;
+    
+    // Final decision
+    let finalDecision;
+    if (isEligible) {
+        if (additionalApproval.value === 'yes') {
+            finalDecision = 'Eligible - Requires additional approval for amounts higher than 25K ⚠️';
+        } else {
+            finalDecision = 'Eligible to proceed ✅';
+        }
+    } else {
+        finalDecision = 'Not Eligible - Review required ❌';
+    }
+    
+    validationHTML += `<p class="final-decision"><strong>Final decision validation:</strong> ${finalDecision}</p>`;
+
+    // Display the result
+    const resultDiv = document.getElementById('validationResultTab3');
     resultDiv.innerHTML = validationHTML;
     resultDiv.className = 'validation-result show ' + (isEligible ? 'eligible' : 'not-eligible');
     

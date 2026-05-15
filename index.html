@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master BPM Process Check Lists</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Master BPM Process Check Lists for Approval and Validation</h1>
+        <div class="header">
+            <img src="IBM-Logo.png" alt="IBM Logo" class="ibm-logo">
+            <h1>Master BPM Process Check Lists for Approval and Validation</h1>
+        </div>
         
         <!-- Tab Navigation -->
         <div class="tabs">
@@ -161,6 +165,20 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="section-label">The approved files was attached?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="filesAttachedTab1" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="filesAttachedTab1" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
                 <button class="generate-btn" onclick="generateValidationText()">Generate Text for Validation</button>
 
                 <div id="validationResult" class="validation-result"></div>
@@ -300,6 +318,24 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="section-label">The approved files was attached?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="filesAttachedTab2" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="filesAttachedTab2" value="no">
+                            No
+                        </label>
+                        <label>
+                            <input type="radio" name="filesAttachedTab2" value="notApplicable">
+                            Not applicable
+                        </label>
+                    </div>
+                </div>
+
                 <button class="generate-btn" onclick="generateTab2ValidationText()">Generate Text for Validation</button>
 
                 <div id="validationResultTab2" class="validation-result"></div>
@@ -309,9 +345,135 @@
         <!-- Tab 3: Quarterly SW VAD rebates -->
         <div id="tab3" class="tab-content">
             <h2>Quarterly SW VAD rebates – Check List</h2>
-            <div class="placeholder">
-                <p>⏳ Awaiting instructions...</p>
-                <p>This section will be configured once requirements are provided.</p>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="section-label">Rebate Type:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="rebateType" value="SW VAD Quarterly Rebates">
+                            SW VAD Quarterly Rebates
+                        </label>
+                        <label>
+                            <input type="radio" name="rebateType" value="SW ESA Tech Broker Quarterly Rebates">
+                            SW ESA Tech Broker Quarterly Rebates
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">The indicate distributor was validated according to masterlist?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="distributorValidated" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="distributorValidated" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">What is the programs involved in this claim?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="programs" value="IBM Cloud">
+                            IBM Cloud
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="NL On Prem">
+                            NL On Prem
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="NL Subscription">
+                            NL Subscription
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="Public Client Promo">
+                            Public Client Promo
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="Reinstatement Trade Up">
+                            Reinstatement Trade Up
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="Renew Subscription">
+                            Renew Subscription
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="Renew On time">
+                            Renew On time
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="SaaS New Renewal">
+                            SaaS New Renewal
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="Subscription License Upgrade">
+                            Subscription License Upgrade
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="SW Support">
+                            SW Support
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="Cloud Aggregator">
+                            Cloud Aggregator
+                        </label>
+                        <label>
+                            <input type="checkbox" name="programs" value="ESA Tech Broker">
+                            ESA Tech Broker
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">The amounts was validated according to masterlist?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="amountsValidated" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="amountsValidated" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">The total amount need additional approval to generate credit or IR (amounts higher than 25K)?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="additionalApproval" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="additionalApproval" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="section-label">The approved files was attached?</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="filesAttached" value="yes">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="filesAttached" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <button class="generate-btn" onclick="generateTab3ValidationText()">Generate Text for Validation</button>
+
+                <div id="validationResultTab3" class="validation-result"></div>
             </div>
         </div>
 
@@ -351,6 +513,11 @@
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <p class="footer-confidential">IBM confidential - 2026</p>
+        <p class="footer-developers">Developed by Lucas Galdino; Julia Piva; Barbara Berto and Loane Izidoro</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
